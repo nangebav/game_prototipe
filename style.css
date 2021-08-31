@@ -49,7 +49,7 @@ body{
     left: 42px;
     z-index: 2;
 
-    background: url(./img/dinoo.png) repeat-x 0px 0px;
+    background: url(img/dinoo.png) repeat-x 0px 0px;
     background-size: 336px 84px;
     background-position-x: 0px;
 
