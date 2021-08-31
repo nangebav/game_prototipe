@@ -4,24 +4,22 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dinosaurio Chrome V2</title>
+    <title>RUN HAPPY </title>
     <LINK REL=StyleSheet HREF="./style.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body>
 
+
     <div class="contenedor">
-
         <div class="suelo"></div>
-        
         <div class="dino dino-corriendo"></div>
-
-        <div class="score">0</div>
-
     </div>
-
+    <div>
+        <div class="Bunny"></div>
+        <div class="score"> 0</div>
+    </div>
     <div class="game-over">GAME OVER</div>
     
-
 <script>
 
 //****** GAME LOOP ********//
@@ -48,12 +46,14 @@ function Loop() {
     requestAnimationFrame(Loop);
 }
 
+
+
 //****** GAME LOGIC ********//
 
 var sueloY = 22;
 var velY = 0;
-var impulso = 900;
-var gravedad = 2500;
+var impulso = 920;
+var gravedad = 2300;
 
 var dinoPosX = 42;
 var dinoPosY = sueloY; 
@@ -66,25 +66,59 @@ var score = 0;
 var parado = false;
 var saltando = false;
 
-var tiempoHastaObstaculo = 2;
-var tiempoObstaculoMin = 0.7;
-var tiempoObstaculoMax = 1.8;
+var tiempoHastaObstaculo = 1;
+var tiempoObstaculoMin = 1;
+var tiempoObstaculoMax = 2;
 var obstaculoPosY = 16;
+
+var tiempoHastaEnemigo = 16;
+var tiempoEnemigoMin = 5;
+var tiempoEnemigoMax = 10;
+var enemigoMinY = 90;
+var enemigoMaxY = 250;
+var enemigos = [];
+var velEnimigo = 0.7;
 var obstaculos = [];
 
+
+
 var tiempoHastaNube = 0.5;
-var tiempoNubeMin = 0.7;
-var tiempoNubeMax = 2.7;
-var maxNubeY = 270;
+var tiempoNubeMin = 1;
+var tiempoNubeMax = 3.5;
+var maxNubeY = 300;
 var minNubeY = 100;
 var nubes = [];
 var velNube = 0.5;
 
-var tiempoHastaMoneda = 2;
+var tiempoHastaEstrella = 0.2;
+var tiempoEstrellaMin = 0.2;
+var tiempoEstrellaMax = 4;
+var maxEstrellaY = 500;
+var minEstrellaY = 100;
+var estrellas = [];
+var velEstrellas = 0.5;
+
+var tiempoHastacespeds= 1;
+var tiempocespedsMin = 0.7;
+var tiempocespedsMax= 5.5;
+var maxcespedsY = 16;
+var mincespedsY = 16;
+var cespeds = [];
+var velcespeds = 0.4;
+
+var tiempoHastaplantas= 0.0;
+var tiempoplantasMin = 0.9;
+var tiempoplantasMax= 5;
+var maxcespedsY = 16;
+var mincespedsY = 16;
+var plantas = [];
+var velplantas = 0.45;
+
+var tiempoHastaMoneda = 5;
 var tiempoMonedaMin = 0.3;
 var tiempoMonedaMax = 1.8;
-var monedaMinY = 5;
-var monedaMaxY = 320;
+var monedaMinY = 100;
+var monedaMaxY = 200;
 var interactuables = [];
 
 var contenedor;
@@ -92,15 +126,24 @@ var dino;
 var textoScore;
 var suelo;
 var gameOver;
+var Bunny;
 
 function Start() {
     gameOver = document.querySelector(".game-over");
     suelo = document.querySelector(".suelo");
     contenedor = document.querySelector(".contenedor");
+    Bunny = document.querySelector(".Bunny");
     textoScore = document.querySelector(".score");
     dino = document.querySelector(".dino");
     document.addEventListener("keydown", HandleKeyDown);
 }
+
+var imagen = document.createElement("img");
+imagen.src="img/facepoint/normal.png"
+imagen.classList.add("imagen");
+document.querySelector(".Bunny").appendChild(imagen);
+
+
 
 function Update() {
     if(parado) return;
@@ -108,10 +151,17 @@ function Update() {
     MoverDinosaurio();
     MoverSuelo();
     DecidirCrearObstaculos();
+    DecidirCrearEnemigo();
     DecidirCrearMonedas();
     DecidirCrearNubes();
+    DecidirCrearEstrellas();
+    DecidirCrearcespeds();
+    DecidirCrearplantas();
     MoverObstaculos();
     MoverNubes();
+    MoverEstrellas();
+    Movercespeds();
+    Moverplantas();
     DetectarColision();
     MoverInteractuables()
     velY -= gravedad * deltaTime;
@@ -121,6 +171,9 @@ function HandleKeyDown(ev){
     if(ev.keyCode == 32){
         Saltar();
     }
+    if(ev.keyCode ==  13){
+        Saltar();
+    }
 }
 
 function Saltar(){
@@ -128,6 +181,7 @@ function Saltar(){
         saltando = true;
         velY = impulso;
         dino.classList.remove("dino-corriendo");
+        imagen.src="img/facepoint/happy.png"
     }
 }
 
@@ -147,6 +201,7 @@ function TocarSuelo() {
         dino.classList.add("dino-corriendo");
     }
     saltando = false;
+    imagen.src="img/facepoint/normal.png"
 }
 
 function MoverSuelo() {
@@ -155,7 +210,7 @@ function MoverSuelo() {
 }
 
 function CalcularDesplazamiento() {
-    return velEscenario * deltaTime * gameVel;
+    return velEscenario * deltaTime;
 }
 
 function Estrellarse() {
@@ -171,10 +226,37 @@ function DecidirCrearObstaculos() {
     }
 }
 
+function DecidirCrearEnemigo(){
+    tiempoHastaEnemigo -= deltaTime;
+    if(tiempoHastaEnemigo <= 0) {
+        CrearEnemigo();
+    }
+}
+
 function DecidirCrearNubes() {
     tiempoHastaNube -= deltaTime;
     if(tiempoHastaNube <= 0) {
         CrearNube();
+    }
+}
+
+function DecidirCrearEstrellas() {
+    if(score > 20) {
+        CrearEstrellas();
+    }
+}
+
+function DecidirCrearcespeds() {
+    tiempoHastacespeds -= deltaTime;
+    if(tiempoHastacespeds <= 0) {
+        Crearcesped();
+    }
+}
+
+function DecidirCrearplantas() {
+    tiempoHastaplantas -= deltaTime;
+    if(tiempoHastaplantas <= 0) {
+        Crearplanta();
     }
 }
 
@@ -203,18 +285,65 @@ function CrearObstaculo() {
     var obstaculo = document.createElement("div");
     contenedor.appendChild(obstaculo);
     obstaculo.classList.add("cactus");
+    console.log("cactus" + Math.random());
     if(Math.random() > 0.5) obstaculo.classList.add("cactus2");
     obstaculo.posX = contenedor.clientWidth;
     obstaculo.style.left = contenedor.clientWidth+"px";
 
     interactuables.push(obstaculo);
-    tiempoHastaObstaculo = tiempoObstaculoMin + Math.random() * (tiempoObstaculoMax-tiempoObstaculoMin) / gameVel;
+    tiempoHastaObstaculo = tiempoObstaculoMin + Math.random() * (tiempoObstaculoMax-tiempoObstaculoMin);
 }
+
+
+function Crearplanta() {
+    var planta = document.createElement("div");
+    contenedor.appendChild(planta);
+    planta.classList.add("planta");
+
+
+    if( Math.random() < 0.2) planta.classList.add("planta2");
+    if(0.3 < Math.random() < 0.4) planta.classList.add("planta3");
+    if(0.41 < Math.random() < 0.6) planta.classList.add("planta4");
+    if(0.61 < Math.random() < 0.7) planta.classList.add("planta5");
+
+    planta.posX = contenedor.clientWidth;
+    planta.style.left = contenedor.clientWidth+"px";
+    plantas.push(planta);
+    tiempoHastaplantas = tiempoplantasMin + Math.random() * (tiempoplantasMax-tiempoplantasMin) / gameVel;
+}
+
+
+function Crearcesped() {
+    var cesped = document.createElement("div");
+    contenedor.appendChild(cesped);
+    cesped.classList.add("cespeds");
+    cesped.posX = contenedor.clientWidth;
+    cesped.style.left = contenedor.clientWidth+"px";
+    cespeds.push(cesped);
+    tiempoHastacespeds = tiempocespedsMin + Math.random() * (tiempocespedsMax-tiempocespedsMin) / gameVel;
+}
+
+
+
+function CrearEnemigo() {
+    var enemigo = document.createElement("div");
+    contenedor.appendChild(enemigo);
+    enemigo.classList.add("enemigo");
+    enemigo.posX = contenedor.clientWidth;
+    enemigo.style.left = contenedor.clientWidth+"px";
+    enemigo.style.bottom = enemigoMinY + (enemigoMaxY - enemigoMinY) * Math.random() + "px";
+
+    interactuables.push(enemigo);
+    tiempoHastaEnemigo = tiempoEnemigoMin + Math.random() * (tiempoEnemigoMax-tiempoEnemigoMin);
+}
+
+
 
 function CrearNube() {
     var nube = document.createElement("div");
     contenedor.appendChild(nube);
     nube.classList.add("nube");
+    if(Math.random() > 0.5) nube.classList.add("nube2");
     nube.posX = contenedor.clientWidth;
     nube.style.left = contenedor.clientWidth+"px";
     nube.style.bottom = minNubeY + Math.random() * (maxNubeY-minNubeY)+"px";
@@ -222,6 +351,19 @@ function CrearNube() {
     nubes.push(nube);
     tiempoHastaNube = tiempoNubeMin + Math.random() * (tiempoNubeMax-tiempoNubeMin) / gameVel;
 }
+
+function CrearEstrellas() {
+    var estrella = document.createElement("div");
+    contenedor.appendChild(estrella);
+    estrella.classList.add("estrella");
+    estrella.posX = contenedor.clientWidth;
+    estrella.style.left = contenedor.clientWidth+"px";
+    estrella.style.bottom = minEstrellaY + Math.random() * (maxEstrellaY-minEstrellaY)+"px";
+    
+    estrellas.push(estrella);
+    tiempoHastaEstrella = tiempoEstrellaMin + Math.random() * (tiempoEstrellaMax-tiempoEstrellaMin) / gameVel;
+}
+
 
 function CrearMoneda() {
     var moneda = document.createElement("div");
@@ -249,6 +391,7 @@ function MoverObstaculos() {
     }
 }
 
+
 function MoverNubes() {
     for (var i = nubes.length - 1; i >= 0; i--) {
         if(nubes[i].posX < -nubes[i].clientWidth) {
@@ -261,36 +404,88 @@ function MoverNubes() {
     }
 }
 
+function MoverEstrellas() {
+    for (var i = estrellas.length - 1; i >= 0; i--) {
+        if(estrellas[i].posX < -estrellas[i].clientWidth) {
+            estrellas[i].parentNode.removeChild(estrellas[i]);
+            estrellas.splice(i, 1);
+        }else{
+            estrellas[i].posX -= CalcularDesplazamiento() * velEstrellas;
+            estrellas[i].style.left = estrellas[i].posX+"px";
+        }
+    }
+}
+
+function Movercespeds() {
+    for (var i = cespeds.length - 1; i >= 0; i--) {
+        if(cespeds[i].posX < -cespeds[i].clientWidth) {
+            cespeds[i].parentNode.removeChild(cespeds[i]);
+            cespeds.splice(i, 1);
+        }else{
+            cespeds[i].posX -= CalcularDesplazamiento() * velcespeds;
+            cespeds[i].style.left = cespeds[i].posX+"px";
+        }
+    }
+}
+
+function Moverplantas() {
+    for (var i = plantas.length - 1; i >= 0; i--) {
+        if(plantas[i].posX < -plantas[i].clientWidth) {
+            plantas[i].parentNode.removeChild(plantas[i]);
+            plantas.splice(i, 1);
+        }else{
+            plantas[i].posX -= CalcularDesplazamiento() * velplantas;
+            plantas[i].style.left = plantas[i].posX+"px";
+        }
+    }
+}
+
 function MoverInteractuables() {
     for (var i = interactuables.length - 1; i >= 0; i--) {
         if(interactuables[i].posX < -interactuables[i].clientWidth) {
             interactuables[i].parentNode.removeChild(interactuables[i]);
             interactuables.splice(i, 1);
         }else{
+            if(interactuables[i].className === 'enemigo'){
+                interactuables[i].posX -= CalcularDesplazamiento() * velEnimigo;
+            }
             interactuables[i].posX -= CalcularDesplazamiento();
+            console.log(interactuables[i].className);
             interactuables[i].style.left = interactuables[i].posX+"px";
         }
     }
 }
 
+
+
 function GanarPuntos() {
+
     score++;
     textoScore.innerText = score;
     if(score == 5){
         gameVel = 1.5;
         contenedor.classList.add("mediodia");
+        imagen.src="img/facepoint/5point.png"
     }else if(score == 10) {
         gameVel = 2;
         contenedor.classList.add("tarde");
+        imagen.src="img/facepoint/10point.png"
     } else if(score == 20) {
         gameVel = 3;
         contenedor.classList.add("noche");
+        imagen.src="img/facepoint/20point.png"
+    } else {
+        if(score++){
+        imagen.src="img/facepoint/point.png"
     }
+    }
+
     suelo.style.animationDuration = (3/gameVel)+"s";
 }
 
 function GameOver() {
     Estrellarse();
+    imagen.src="img/facepoint/murder.png"
     gameOver.style.display = "block";
 }
 
