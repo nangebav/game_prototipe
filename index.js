@@ -3,6 +3,7 @@
 const textbox = document.querySelector(".openContainer");
 const villain = document.querySelector('#villain')
 const text = document.querySelector("#opener-text");
+const btnStart = document.querySelector('.start')
 var dino = document.querySelector(".dino");
 
 
@@ -10,9 +11,9 @@ dino.classList.remove("dino-corriendo");
 
 text.innerHTML = `
     <p>
-    Hoy eres la princesa Mononoke.
-    <br>El Forest Spirit y Kodama están aquí contigo,
-    pero ten cuidado, tienes que evitar los demonios...
+    Hoy eres una gigante Wari.
+    <br>Ve y disfruta el mundo,
+    pero ten cuidado, tienes que evitar los obstaculos...
     </p>
 `
 
@@ -232,11 +233,12 @@ function Estrellarse() {
         text.innerHTML = `
         <h3>Awwww!</h3>
         <p>
-        You were defeated by Okkoto. The Forest and Kodama can't be saved and begin to die.
+        Fuiste derrotado,
+        reinicia el juego.
         </p>
         `;
         textbox.style.display = "block" 
-
+        btnStart.style.display = "none" 
         imagen.src="img/facepoint/murder.png"
     }
 
