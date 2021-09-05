@@ -6,18 +6,132 @@
 
 body{
     height: 100vh;
-    background: linear-gradient(180deg, #dd6eee 0%, #fc949d 80.93%, #ffcd81 182.8%);
-
-    display: flex;
-    align-items: center;
-
+    background: rgb(0, 0, 0);
 }
 
+.game{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
+.openContainer{
+    position: absolute;
+    z-index:4;
+    margin-left: 40%;
+    margin-top: 20px;
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
+    font-family: "Hammersmith One", sans-serif, Arial;
+    opacity: 0.9;
+}
+
+.opener{
+    overflow-y:hidden;
+    width: 50vw;
+    height: 30vh;
+    background: black;
+    font-size: 1.2rem;
+    left: 50%;
+    color: white;
+    margin-left: -16.7vw;
+    border-radius: 6px;
+    padding: 10vmin 4%;
+    line-height: 1.4em;
+    border: 2px solid white;
+    max-width: 840px;
+}
+
+button.start {
+    padding: 0.5em 1em;
+    background: #a5ceb3;
+    color: black;
+    border-radius: 6px;
+    border: none;
+    margin: 30px auto;
+    display: table;
+    transition: background 0.5s ease;
+}
+
+.pointer{
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.imagen{
+    height:60px;
+    background-size: cover;
+}
+
+#sol {
+    margin: 20px;
+    height: 200px ;
+    width: 200px;
+    background-image: url(./img/sol.png);
+    background-size: 200px 200px;
+    -webkit-animation: rotate 20s normal linear infinite;
+    animation: rotate 20s normal linear infinite;
+  }
+  @keyframes rotate {
+    0% {
+      -webkit-transform: rotate3d(0, 0, 1, 0deg);
+      transform: rotate3d(0, 0, 1, 0deg);
+    }
+    25% {
+      -webkit-transform: rotate3d(0, 0, 1, 90deg);
+      transform: rotate3d(0, 0, 1, 90deg);
+    }
+    50% {
+      -webkit-transform: rotate3d(0, 0, 1, 180deg);
+      transform: rotate3d(0, 0, 1, 180deg);
+    }
+    75% {
+      -webkit-transform: rotate3d(0, 0, 1, 270deg);
+      transform: rotate3d(0, 0, 1, 270deg);
+    }
+    100% {
+      -webkit-transform: rotate3d(0, 0, 1, 360deg);
+      transform: rotate3d(0, 0, 1, 360deg);
+    }
+  }
+
+
+.quilla{
+    right: 35%;
+    height: 283px;
+    width: 389px;
+    bottom: 18px;
+    border-radius: 0px;
+
+    position: absolute;
+    z-index: 2;
+    background: url(img/Quilla.png) no-repeat center center;
+    background-size:389px 283px;
+}
+  
+
+.star{
+    height: 20px;
+    background-size: cover;
+}
+
+.score{
+    color: rgb(255, 255, 255);
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: right;
+    margin-left: 10px;
+}
 
 .contenedor {
-    width: 920px;
-    height: 400px;
+    width: 90vw;
+    height: 70vh;
     margin: 0 auto;
     border-radius: 40px;
     position: relative;
@@ -26,74 +140,116 @@ body{
     overflow: hidden;
 }
 
-
-
 .mediodia {
-    background-color:#ffadad, rgba(244, 169, 255, 1); 
+    background: linear-gradient(180deg, #FFBA83 0%, #F38B9D 110.25%);
 }
 
+
 .tarde {
-    background-color: rgba(244, 169, 255, 1)
+
+    background: linear-gradient(180deg, #431C50 0%, #EF363E 32.81%, #FAD61A 100%);
 }
 
 .noche {
-    background-color: rgba(148, 77, 171, 1)
+    background: linear-gradient(92.09deg, #000F6A 3.21%, #3D1285 28.4%, #944DAB 52.3%, #D45DCA 67.94%, #FBE5F1 107.02%);
 }
 
-.dino {
-    width: 80px;
-    height: 84px;
-
+.dino{
+    width:104px;
+    height:113.5px;
     position: absolute;
     bottom: 22px;
     left: 42px;
-    z-index: 2;
+    z-index: 4;
+    background-image: url(./img/png/sprite.png);
+    background-size: 520px, 454px;
+    background-position-x: 416px;
+  }
 
-    background: url(img/dinoo.png) repeat-x 0px 0px;
-    background-size: 336px 84px;
-    background-position-x: 0px;
-
+  .dino-estrellado {
+    width:104px;
+    height:113.5px;
+    bottom: 22px;
+    left: 42px;
+    z-index: 4;
+    position: absolute;
+    background-image: url(./img/png/estrellada.png);
+    background-size: cover;
 }
+
 
 .dino-corriendo {
-    animation: animarDino 0.4s steps(2) infinite;
+    animation: playXIdle 0.6s steps(5)  infinite,
+               playYIdle 0.6s steps(4)infinite
 }
-.dino-estrellado {
-    background-position-x: -252px;
-}
+
+@keyframes playXIdle {
+    from {background-position-x: 0px;}
+    to {background-position-x: -520px;}
+  }
+  @keyframes playYIdle {
+    from {background-position-y: 0px;}
+    to {background-position-y: -454px;}
+  }
+
+.parpadea {
+    animation-name: parpadeo;
+    animation-duration: 0.2s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  
+    -webkit-animation-name:parpadeo;
+    -webkit-animation-duration: 0.2s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+  }
+  
+  @-moz-keyframes parpadeo{  
+    0% { opacity: 0.8; }
+    50% { opacity: 0.0; }
+    100% { opacity: 0.8; }
+  }
+  
+  @-webkit-keyframes parpadeo {  
+    0% { opacity: 0.8; }
+    50% { opacity: 0.0; }
+     100% { opacity: 0.8; }
+  }
+  
+  @keyframes parpadeo {  
+    0% { opacity: 0.8; }
+     50% { opacity: 0.0; }
+    100% { opacity: 0.8; }
+  }
 
 .suelo {
     width: 200%;
     height: 42px;
+    z-index: 2;
     position: absolute;
     bottom: 0;
     left: 0;
     background: url(img/suelo.png) repeat-x 0px 0px;
     background-size: 50% 42px;
-
 }
 
-.cactus{
-    width: 32px;
-    height: 110px;
+.montañas {
+    bottom: 0;
     position: absolute;
-    bottom: 25px;
-    left: 600px;
     z-index: 1;
-    background: url(img/cactus1.png) no-repeat;
-    background-size: 32px 110px;
-}
+    width: 200%;
+    height: 60%;
+    background: url(img/montañas.png) repeat-x 0px 0px;
+    background-size: 50% 100%;
+    /* mix-blend-mode:overlay; */
 
-.cactus2{
-    width: 98px;
-    background: url(img/cactus2.png) no-repeat;
-    background-size: 98px 116px;
 }
 
 
 .planta, .planta2, .planta3, .planta4 {
     bottom: 40px;
     position: absolute;
+    z-index: 2;
 }
 
 .planta{
@@ -130,19 +286,12 @@ body{
     background-size: 100px 215px;
     ;
 }
-
-.imagen{
-    width: 400px;
-    height: 400px;
-    background-size: cover;
-
-}
-
 .cespeds {
     width: 163px;
     height: 63px;
     bottom: 40px;
     position: absolute;
+    z-index: 2;
     background: url(img/font.png) no-repeat;
     background-size: 163px 63px;
 }
@@ -160,17 +309,33 @@ body{
     width: 90px;
     height: 120px;
     position: absolute;
-    z-index: 0;
+    z-index: 3;
     background: url(img/enemigo.gif) repeat-x 0px 0px;
     background-size: 90px 120px;
-    animation: animarEnemigo 0.4s steps(2) infinite;
+    -webkit-animation: balloon2 6s ease-in-out infinite;
+    -moz-animation: balloon2 6s ease-in-out infinite;
+    -o-animation: balloon2 6s ease-in-out infinite;
+    animation: balloon2 6s ease-in-out infinite;
+}
+
+
+@keyframes balloon2 {
+    0%, 100% {
+        transform: translateY(0) rotate(-6deg);
+    }
+    50% {
+        transform: translateY(-20px) rotate(8deg);
+    }
+}
+
+.nube, .nube2, .nube3, .nube4{
+    position: absolute;
+    z-index: 1;
 }
 
 .nube{
     width: 226px;
     height: 127px;
-    position: absolute;
-    z-index: 1;
     background: url(img/nube.png) no-repeat;
     background-size: 226px 127px;
 }
@@ -178,47 +343,39 @@ body{
 .nube2{
     width: 306px;
     height: 100px;
-    position: absolute;
-    z-index: 1;
     background: url(img/nube2.png) no-repeat;
     background-size: 306px 100px;
 }
 
+.nube3{
+    width: 226px;
+    height: 127px;
+    background: url(img/nube3.png) no-repeat;
+    background-size: 226px 127px;
+}
 
+.nube4{
+    width: 266px;
+    height: 90px;
+    background: url(img/nube4.png) no-repeat;
+    background-size: 266px 90px;
+}
 
 
 .moneda{
     width: 55px;
     height: 55px;
     position: absolute;
-    z-index: 1;
+    z-index: 3;
     background: url(img/moneda.png) no-repeat center center;
     background-size: cover;
 }
 
-.score{
-    width: 100px;
-    height: 30px;
-
-    position: absolute;
-    top: 5px;
-    right: 15px;
-    z-index: 10;
-
-    color: #ffffff;
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size: 30px;
-    font-weight: bold;
-    text-align: right;
-}
 
 .game-over{
     display: none;
-
     position: absolute;
     width: 100%;
-
-
     text-align: center;
     font-size: 0px;
     color: #ffffff;
@@ -226,11 +383,30 @@ body{
     font-weight: 700;
 }
 
-@keyframes animarDino{
-    from{
-        background-position-x: -84px;
-    }
-    to{
-        background-position-x: -252px;
-    }
+
+.progress {
+    background: none;
+    pointer-events: none;
 }
+    progress {
+      position: relative;
+      display: block;
+      background-color: transparent;
+
+    }
+  
+    ::-webkit-progress-bar {
+      background-color: white;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      border-bottom-left-radius: 6px;
+      border-bottom-right-radius: 6px;
+    }
+  
+    ::-webkit-progress-value {
+      background-image: linear-gradient(132deg, #F4D03F 0%, #16A085 100%);
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      border-bottom-left-radius: 6px;
+      border-bottom-right-radius: 6px;
+    }
